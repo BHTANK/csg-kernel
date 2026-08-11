@@ -1,0 +1,20 @@
+# Authors
+
+## Package maintainers
+
+BHTANK <https://github.com/BHTANK>
+
+## Algorithm author (BSP CSG)
+
+Evan Wallace <http://madebyevan.com/> — csg.js (MIT, 2011)
+
+## Peer library authors
+
+Ricardo Cabello (mrdoob) and three.js contributors <https://github.com/mrdoob/three.js>
+
+## Referenced creators (inspiration / catalog / API familiarity)
+
+Garrett Johnson (gkjohnson) — three-bvh-csg, three-mesh-bvh
+robot 2.0 (@alightinastorm) — web CSG / procedural three.js asset discussion
+
+See CREDITS.md for exact usage boundaries.

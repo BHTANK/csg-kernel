@@ -1,0 +1,41 @@
+csg-kernel
+Copyright (c) 2026 BHTANK
+SPDX-License-Identifier: MIT
+
+----
+
+Third-party notices for material used or referenced in this package:
+
+1) csg.js (BSP CSG algorithm)
+   Copyright (c) 2011 Evan Wallace (http://madebyevan.com/)
+   License: MIT
+   Source: https://github.com/evanw/csg.js
+   Used in: src/bsp.js, src/csg.js, CSGKernel.mono.js (algorithm lineage)
+
+2) three.js (peer dependency)
+   Copyright © 2010-present three.js authors
+   Lead: Ricardo Cabello (mrdoob)
+   License: MIT
+   Source: https://github.com/mrdoob/three.js
+   Used as: peer dependency "three" (not vendored)
+
+3) three.js examples / jsm (catalog paths only)
+   Copyright © three.js authors
+   License: MIT
+   Source: https://github.com/mrdoob/three.js/tree/dev/examples
+   Used in: kit/helpers-catalog.json (module path index only; no example assets)
+
+4) three-bvh-csg (API shape inspiration only)
+   Copyright (c) Garrett Johnson (gkjohnson) and contributors
+   License: MIT
+   Source: https://github.com/gkjohnson/three-bvh-csg
+   Used as: Brush / Evaluator / op constant naming pattern — not a source fork
+
+5) Problem-domain inspiration (no code)
+   robot 2.0 (@alightinastorm) / vibe-stack public posts and packages
+   Links: https://x.com/alightinastorm
+   Used as: documentation motivation only
+
+----
+
+Full human-readable credits: CREDITS.md
