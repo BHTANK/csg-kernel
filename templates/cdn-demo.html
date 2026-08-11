@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>csg-kernel — CDN demo (no npmjs account)</title>
+  <style>
+    body { margin: 0; overflow: hidden; background: #0a0c10; color: #d8e2ee;
+      font-family: system-ui, sans-serif; }
+    canvas { display: block; }
+    #ui {
+      position: absolute; top: 16px; left: 16px; max-width: 300px;
+      padding: 12px 14px; background: rgba(12,16,24,.9);
+      border: 1px solid #1e2a3a; border-radius: 10px; font-size: 12px; line-height: 1.4;
+    }
+    h1 { margin: 0 0 6px; font-size: 14px; color: #3dffa8; }
+    code { color: #6eb6ff; font-size: 11px; }
+    .muted { color: #7a8a9e; margin-top: 8px; }
+  </style>
+</head>
+<body>
+  <div id="ui">
+    <h1>csg-kernel (CDN)</h1>
+    <div>Loaded from <code>jsDelivr → GitHub</code></div>
+    <div class="muted">No npmjs account. Peer three.js from unpkg.</div>
+    <div class="muted">Credits: Evan Wallace (csg.js), mrdoob (three.js), BHTANK — see CREDITS.md</div>
+  </div>
+
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/",
+      "csg-kernel": "https://cdn.jsdelivr.net/gh/BHTANK/csg-kernel@main/CSGKernel.js",
+      "csg-kernel/": "https://cdn.jsdelivr.net/gh/BHTANK/csg-kernel@main/"
+    }
+  }
+  </script>
+  <script type="module">
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+    import { wallWithDoor } from 'csg-kernel';
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+    renderer.setSize(innerWidth, innerHeight);
+    renderer.setClearColor(0x0a0c10, 1);
+    document.body.appendChild(renderer.domElement);
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(45, innerWidth / innerHeight, 0.1, 100);
+    camera.position.set(5, 2.8, 6);
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.target.set(0, 0.3, 0);
+
+    scene.add(new THREE.AmbientLight(0x6080a0, 0.55));
+    const key = new THREE.DirectionalLight(0xffffff, 1.1);
+    key.position.set(5, 9, 4);
+    scene.add(key);
+
+    const ground = new THREE.Mesh(
+      new THREE.CircleGeometry(12, 48),
+      new THREE.MeshStandardMaterial({ color: 0x141a22, roughness: 0.95 })
+    );
+    ground.rotation.x = -Math.PI / 2;
+    ground.position.y = -1.55;
+    scene.add(ground);
+
+    const { group } = wallWithDoor({
+      width: 5, height: 3, thickness: 0.28,
+      doorW: 1.05, doorH: 2.15, doorX: -0.3
+    });
+    scene.add(group);
+
+    addEventListener('resize', () => {
+      camera.aspect = innerWidth / innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(innerWidth, innerHeight);
+    });
+
+    (function tick() {
+      requestAnimationFrame(tick);
+      controls.update();
+      renderer.render(scene, camera);
+    })();
+  </script>
+</body>
+</html>
