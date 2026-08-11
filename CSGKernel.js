@@ -1,7 +1,11 @@
 /**
- * CSGKernel — proper BSP Constructive Solid Geometry for three.js
- * Modular entry. Single-file: CSGKernel.mono.js
- * MIT — algorithm © Evan Wallace; bridge © BHTANK / Three.JS-Lab
+ * CSGKernel — BSP CSG for three.js (ES module entry)
+ *
+ * Creators (see CREDITS.md · NOTICE · LICENSE):
+ *   - BSP algorithm: Evan Wallace — csg.js (MIT, © 2011) https://github.com/evanw/csg.js
+ *   - three.js peer: mrdoob & contributors (MIT) https://threejs.org/
+ *   - Brush/Evaluator naming inspired by three-bvh-csg — gkjohnson (MIT)
+ *   - Package, bridge, prefabs, kit: BHTANK (MIT, © 2026)
  */
 export {
   ADDITION, SUBTRACTION, REVERSE_SUBTRACTION, INTERSECTION, DIFFERENCE, OPS,
