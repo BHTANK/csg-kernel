@@ -1,5 +1,9 @@
 /**
- * Wall / door / window prefab helpers (gap-free cutouts).
+ * src/prefabs.js
+ *
+ * Original prefab helpers: BHTANK
+ * Domain motivation: procedural web asset / wall-door gap discussions (@alightinastorm) — no code copied
+ * Full credits: CREDITS.md · NOTICE · LICENSE
  */
 import * as THREE from 'three';
 import { CSG } from './csg.js';
