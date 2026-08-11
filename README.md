@@ -6,83 +6,85 @@ Boolean ops that produce real meshes — not stacked boxes that z-fight.
 
 ```bash
 npm install csg-kernel three
+# or (works now)
+npm install github:BHTANK/csg-kernel three
 ```
 
 ```js
 import { CSG, wallWithDoor, Brush, Evaluator, SUBTRACTION } from 'csg-kernel';
+import { assemble, helpersCatalog } from 'csg-kernel/kit';
+import { hollowBox, windowFacade } from 'csg-kernel/recipes';
 
 scene.add(CSG.subtract(boxMesh, sphereMesh));
-
 const { group } = wallWithDoor({ width: 5, height: 3, doorW: 1.05, doorH: 2.15 });
 scene.add(group);
 ```
 
 ---
 
-## Install (customers)
+## Creators & attribution
 
-### npm (after publish)
+**Every third-party lineage used in this package is credited.** See:
+
+| File | Purpose |
+|------|---------|
+| [`CREDITS.md`](./CREDITS.md) | Full human-readable creators table |
+| [`NOTICE`](./NOTICE) | SPDX-style third-party notices |
+| [`AUTHORS`](./AUTHORS) | Authors list |
+| [`LICENSE`](./LICENSE) | MIT + embedded third-party MIT notices |
+
+| Creator | Contribution |
+|---------|----------------|
+| **Evan Wallace** | BSP CSG algorithm ([csg.js](https://github.com/evanw/csg.js), MIT © 2011) |
+| **mrdoob** & three.js contributors | Peer library [three.js](https://threejs.org/) (MIT) |
+| **Garrett Johnson (gkjohnson)** | Brush/Evaluator *API shape* inspiration ([three-bvh-csg](https://github.com/gkjohnson/three-bvh-csg), MIT) — not a source fork |
+| **BHTANK** | BufferGeometry bridge, prefabs, kit, recipes, CLI, packaging (MIT © 2026) |
+| **@alightinastorm** (docs only) | Problem framing for wall/door gaps — **no code copied** |
+
+```bash
+npx csg-kernel credits
+```
+
+---
+
+## Install
 
 ```bash
 npm install csg-kernel three
-# or
-pnpm add csg-kernel three
-# or
-yarn add csg-kernel three
+npm install github:BHTANK/csg-kernel three   # GitHub direct
 ```
 
-### From GitHub (works now)
+### npx
 
 ```bash
-npm install github:BHTANK/csg-kernel three
-```
-
-### npx (no install required for demos / scaffold)
-
-```bash
-# Interactive help
-npx csg-kernel
-
-# Scaffold a browser project
-npx csg-kernel init my-csg-app
-cd my-csg-app && npm install && npm start
-
-# Serve package demos
-npx csg-kernel demo
-# → http://localhost:5177
+npx github:BHTANK/csg-kernel
+npx github:BHTANK/csg-kernel init my-csg-app
+npx github:BHTANK/csg-kernel demo
+npx github:BHTANK/csg-kernel credits
 ```
 
 ---
 
-## API (short)
+## Packages / exports
 
-| Export | Role |
-|--------|------|
-| `CSG.union / subtract / intersect / difference` | Mesh or geometry booleans |
-| `CSG.unionAll / subtractAll` | Multi-cutter walls |
-| `Brush` + `Evaluator` | three-bvh-csg-shaped API |
-| `wallWithOpenings` / `doorFrame` / `wallWithDoor` | Gap-free prefab helpers |
-| `ADDITION`, `SUBTRACTION`, … | Op constants |
-| `csg-kernel/mono` | Single-file build (optional) |
-
-```js
-import { CSG, SUBTRACTION, Brush, Evaluator } from 'csg-kernel';
-// or
-import { CSG } from 'csg-kernel/mono';
-```
+| Import | Contents |
+|--------|----------|
+| `csg-kernel` | CSG, Brush, Evaluator, prefabs, ops |
+| `csg-kernel/kit` | assemble, mesh-utils, scene-boot, helpers catalog |
+| `csg-kernel/recipes` | hollowBox, pipeSegment, plateWithHoles, windowFacade, wall/door |
+| `csg-kernel/mono` | Single-file build |
 
 Peer: **`three` ≥ 0.150**.
 
----
+### Three.js Helpers (local)
 
-## Why
-
-Stacking wall + window + frame → z-fighting and door gaps.  
-Convex plane-brushes can’t cut freeform openings.  
-This package is a clear BSP kernel wired to **BufferGeometry**, **world matrices**, and **multi-material groups**.
+Your offline Helpers kit (examples + `jsm/`) is **mrdoob’s three.js examples tree**.  
+We ship only a **path catalog** (`kit/helpers-catalog.*`) — not the 400 MB assets.  
+See [`docs/HELPERS_INTEGRATION.md`](./docs/HELPERS_INTEGRATION.md).
 
 ---
 
 ## License
 
-MIT. BSP algorithm © 2011 Evan Wallace. Bridge & packaging © BHTANK.
+MIT © BHTANK, with third-party notices for Evan Wallace (csg.js) and three.js authors.  
+Full text: `LICENSE` · `CREDITS.md` · `NOTICE`.
