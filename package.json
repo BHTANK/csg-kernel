@@ -1,7 +1,7 @@
 {
   "name": "csg-kernel",
-  "version": "1.0.0",
-  "description": "Proper BSP Constructive Solid Geometry kernel for three.js — BufferGeometry, world matrices, multi-material, wall/door prefab helpers.",
+  "version": "1.1.0",
+  "description": "Proper BSP CSG kernel for three.js with assembly kit, recipes, and helpers catalog. Algorithm: Evan Wallace csg.js (MIT). Peer: three.js (mrdoob). Packaging: BHTANK.",
   "type": "module",
   "main": "./CSGKernel.js",
   "module": "./CSGKernel.js",
@@ -19,6 +19,14 @@
       "import": "./CSGKernel.mono.js",
       "default": "./CSGKernel.mono.js"
     },
+    "./kit": {
+      "import": "./kit/index.js",
+      "default": "./kit/index.js"
+    },
+    "./recipes": {
+      "import": "./recipes/index.js",
+      "default": "./recipes/index.js"
+    },
     "./package.json": "./package.json"
   },
   "files": [
@@ -26,16 +34,24 @@
     "CSGKernel.mono.js",
     "CSGKernel.d.ts",
     "src",
+    "kit",
+    "recipes",
     "bin",
     "templates",
+    "docs",
+    "demos",
     "demo.html",
     "wall-prefab.html",
     "LICENSE",
+    "NOTICE",
+    "CREDITS.md",
+    "AUTHORS",
     "README.md"
   ],
   "scripts": {
     "demo": "node bin/csg-kernel.js demo",
-    "prepublishOnly": "node --check CSGKernel.js && node --check src/csg.js && node --check bin/csg-kernel.js"
+    "credits": "node bin/csg-kernel.js credits",
+    "prepublishOnly": "node --check CSGKernel.js && node --check src/csg.js && node --check bin/csg-kernel.js && node --check kit/index.js"
   },
   "peerDependencies": {
     "three": ">=0.150.0"
@@ -56,7 +72,13 @@
     "wall",
     "door",
     "window",
-    "npx"
+    "npx",
+    "credits",
+    "attribution",
+    "evan-wallace",
+    "mrdoob",
+    "assembly",
+    "recipes"
   ],
   "license": "MIT",
   "author": "BHTANK",
@@ -70,5 +92,11 @@
   "homepage": "https://github.com/BHTANK/csg-kernel#readme",
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "contributors": [
+    "BHTANK (package, bridge, prefabs, kit)",
+    "Evan Wallace (csg.js BSP algorithm, MIT 2011)",
+    "Ricardo Cabello / mrdoob and three.js contributors (peer library, MIT)",
+    "Garrett Johnson / gkjohnson (three-bvh-csg API shape inspiration, MIT)"
+  ]
 }
