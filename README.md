@@ -25,7 +25,9 @@ scene.add(group);
 
 ```bash
 npm install csg-kernel three
+# or
 pnpm add csg-kernel three
+# or
 yarn add csg-kernel three
 ```
 
@@ -35,20 +37,19 @@ yarn add csg-kernel three
 npm install github:BHTANK/csg-kernel three
 ```
 
-### npx
+### npx (no install required for demos / scaffold)
 
 ```bash
-npx github:BHTANK/csg-kernel
-npx github:BHTANK/csg-kernel init my-csg-app
-npx github:BHTANK/csg-kernel demo
-```
-
-After the package is on the npm registry:
-
-```bash
+# Interactive help
 npx csg-kernel
+
+# Scaffold a browser project
 npx csg-kernel init my-csg-app
+cd my-csg-app && npm install && npm start
+
+# Serve package demos
 npx csg-kernel demo
+# → http://localhost:5177
 ```
 
 ---
@@ -64,7 +65,21 @@ npx csg-kernel demo
 | `ADDITION`, `SUBTRACTION`, … | Op constants |
 | `csg-kernel/mono` | Single-file build (optional) |
 
+```js
+import { CSG, SUBTRACTION, Brush, Evaluator } from 'csg-kernel';
+// or
+import { CSG } from 'csg-kernel/mono';
+```
+
 Peer: **`three` ≥ 0.150**.
+
+---
+
+## Why
+
+Stacking wall + window + frame → z-fighting and door gaps.  
+Convex plane-brushes can’t cut freeform openings.  
+This package is a clear BSP kernel wired to **BufferGeometry**, **world matrices**, and **multi-material groups**.
 
 ---
 
