@@ -1,5 +1,9 @@
 /**
- * Brush + Evaluator (three-bvh-csg-shaped API).
+ * src/brush.js
+ *
+ * Brush/Evaluator API shape inspired by three-bvh-csg — Garrett Johnson / gkjohnson (MIT)
+ * Implementation is BSP (Wallace), not BVH. Package: BHTANK
+ * Full credits: CREDITS.md · NOTICE · LICENSE
  */
 import * as THREE from 'three';
 import {
