@@ -1,0 +1,38 @@
+name: assemble-large-uploads
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "kit/_parts/**"
+      - ".github/workflows/assemble-large-uploads.yml"
+permissions:
+  contents: write
+jobs:
+  assemble:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Assemble full files from parts
+        run: |
+          set -euo pipefail
+          assemble() {
+            local dir="$1" dest="$2"
+            if [ -d "$dir" ] && ls "$dir"/*.txt >/dev/null 2>&1; then
+              cat $(ls "$dir"/*.txt | sort) > "$dest"
+              echo "assembled $dest ($(wc -c < "$dest") bytes)"
+            else
+              echo "skip missing $dir"
+            fi
+          }
+          assemble kit/_parts/mono CSGKernel.mono.js
+          assemble kit/_parts/helpers_js kit/helpers-catalog.js
+          assemble kit/_parts/helpers_json kit/helpers-catalog.json
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add CSGKernel.mono.js kit/helpers-catalog.js kit/helpers-catalog.json
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Assemble full mono + helpers-catalog (Wallace BSP + BHTANK; CREDITS.md)"
+            git push
+          fi
