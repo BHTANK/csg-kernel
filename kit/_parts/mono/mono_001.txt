@@ -1,0 +1,107 @@
+───────────────────────────
+class Plane {
+  constructor(normal, w) {
+    this.normal = normal;
+    this.w = w;
+  }
+  clone() { return new Plane(this.normal.clone(), this.w); }
+  flip() {
+    this.normal = this.normal.negated();
+    this.w = -this.w;
+  }
+  static fromPoints(a, b, c) {
+    const n = b.minus(a).cross(c.minus(a)).unit();
+    return new Plane(n, n.dot(a));
+  }
+
+  splitPolygon(polygon, coplanarFront, coplanarBack, front, back) {
+    const COPLANAR = 0, FRONT = 1, BACK = 2, SPANNING = 3;
+    let polygonType = 0;
+    const types = [];
+    const verts = polygon.vertices;
+
+    for (let i = 0; i < verts.length; i++) {
+      const t = this.normal.dot(verts[i].pos) - this.w;
+      const type = (t < -EPS) ? BACK : (t > EPS) ? FRONT : COPLANAR;
+      polygonType |= type;
+      types.push(type);
+    }
+
+    switch (polygonType) {
+      case COPLANAR:
+        (this.normal.dot(polygon.plane.normal) > 0 ? coplanarFront : coplanarBack).push(polygon);
+        break;
+      case FRONT:
+        front.push(polygon);
+        break;
+      case BACK:
+        back.push(polygon);
+        break;
+      case SPANNING: {
+        const f = [], b = [];
+        for (let i = 0; i < verts.length; i++) {
+          const j = (i + 1) % verts.length;
+          const ti = types[i], tj = types[j];
+          const vi = verts[i], vj = verts[j];
+          if (ti !== BACK) f.push(vi);
+          if (ti !== FRONT) b.push(ti !== BACK ? vi.clone() : vi);
+          if ((ti | tj) === SPANNING) {
+            const denom = this.normal.dot(vj.pos.minus(vi.pos));
+            const t = Math.abs(denom) > 1e-12
+              ? (this.w - this.normal.dot(vi.pos)) / denom
+              : 0.5;
+            const v = vi.interpolate(vj, t);
+            f.push(v);
+            b.push(v.clone());
+          }
+        }
+        if (f.length >= 3) front.push(new Polygon(f, polygon.shared));
+        if (b.length >= 3) back.push(new Polygon(b, polygon.shared));
+        break;
+      }
+    }
+  }
+}
+
+// ─── Polygon ────────────────────────────────────────────────────────────────
+class Polygon {
+  /**
+   * @param {Vertex[]} vertices
+   * @param {number|object} shared  material/group index (number) or metadata
+   */
+  constructor(vertices, shared = 0) {
+    this.vertices = vertices;
+    this.shared = shared;
+    this.plane = Plane.fromPoints(vertices[0].pos, vertices[1].pos, vertices[2].pos);
+  }
+  clone() {
+    return new Polygon(this.vertices.map(v => v.clone()), this.shared);
+  }
+  flip() {
+    this.vertices.reverse();
+    for (let i = 0; i < this.vertices.length; i++) this.vertices[i].flip();
+    this.plane.flip();
+  }
+}
+
+// ─── BSP Node ───────────────────────────────────────────────────────────────
+class Node {
+  constructor(polygons) {
+    this.plane = null;
+    this.front = null;
+    this.back = null;
+    this.polygons = [];
+    if (polygons) this.build(polygons);
+  }
+
+  clone() {
+    const n = new Node();
+    n.plane = this.plane && this.plane.clone();
+    n.front = this.front && this.front.clone();
+    n.back = this.back && this.back.clone();
+    n.polygons = this.polygons.map(p => p.clone());
+    return n;
+  }
+
+  invert() {
+    for (let i = 0; i < this.polygons.length; i++) this.polygons[i].flip()
