@@ -1,0 +1,1 @@
+@/tmp/csg_mono.js
