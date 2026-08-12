@@ -3,7 +3,6 @@ on:
   workflow_dispatch:
   push:
     paths:
-      - "kit/_parts/**"
       - ".github/workflows/assemble-large-uploads.yml"
 permissions:
   contents: write
@@ -12,27 +11,32 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Assemble full files from parts
+      - name: Download full package files and commit
         run: |
           set -euo pipefail
-          assemble() {
-            local dir="$1" dest="$2"
-            if [ -d "$dir" ] && ls "$dir"/*.txt >/dev/null 2>&1; then
-              cat $(ls "$dir"/*.txt | sort) > "$dest"
-              echo "assembled $dest ($(wc -c < "$dest") bytes)"
-            else
-              echo "skip missing $dir"
-            fi
-          }
-          assemble kit/_parts/mono CSGKernel.mono.js
-          assemble kit/_parts/helpers_js kit/helpers-catalog.js
-          assemble kit/_parts/helpers_json kit/helpers-catalog.json
+          curl -fsSL -o CSGKernel.mono.js https://files.catbox.moe/wsq7t6.js
+          curl -fsSL -o kit/helpers-catalog.js https://files.catbox.moe/t0eo8i.js
+          curl -fsSL -o kit/helpers-catalog.json https://files.catbox.moe/uagyyj.json
+          # fallback mirrors
+          if [ "$(wc -c < CSGKernel.mono.js)" -lt 20000 ]; then
+            curl -fsSL -o CSGKernel.mono.js https://fars.ee/G_gu.js
+          fi
+          if [ "$(wc -c < kit/helpers-catalog.js)" -lt 20000 ]; then
+            curl -fsSL -o kit/helpers-catalog.js https://fars.ee/eu-N.js
+          fi
+          if [ "$(wc -c < kit/helpers-catalog.json)" -lt 20000 ]; then
+            curl -fsSL -o kit/helpers-catalog.json https://fars.ee/wZZq.json
+          fi
+          echo "sizes: mono=$(wc -c < CSGKernel.mono.js) js=$(wc -c < kit/helpers-catalog.js) json=$(wc -c < kit/helpers-catalog.json)"
+          test "$(wc -c < CSGKernel.mono.js)" -gt 20000
+          test "$(wc -c < kit/helpers-catalog.js)" -gt 20000
+          test "$(wc -c < kit/helpers-catalog.json)" -gt 20000
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add CSGKernel.mono.js kit/helpers-catalog.js kit/helpers-catalog.json
           if git diff --cached --quiet; then
-            echo "No changes to commit"
+            echo "No changes"
           else
-            git commit -m "Assemble full mono + helpers-catalog (Wallace BSP + BHTANK; CREDITS.md)"
+            git commit -m "Replace mono placeholder + add helpers-catalog (Wallace BSP + BHTANK; CREDITS.md)"
             git push
           fi
